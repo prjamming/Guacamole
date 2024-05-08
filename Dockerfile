@@ -3,9 +3,10 @@ FROM guacamole/guacamole
 # Expose Guacamole web interface port (default 8080)
 EXPOSE 8080
 
-# Create and initialize PostgreSQL data directory
-RUN mkdir -p /var/lib/postgresql/data/pgdata && \
-    postgresql-13-initdb -d /var/lib/postgresql/data/pgdata
+# Create and initialize PostgreSQL data directory (using a dedicated path)
+RUN mkdir -p /app-data/postgresql && \
+    chown -R postgres:postgres /app-data/postgresql && \
+    postgresql-13-initdb -d /app-data/postgresql
 
 # Environment variables for Guacamole configuration (replace with your values)
 ENV GUACD_PROTOCOL RDP  # Change to VNC if needed
