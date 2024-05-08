@@ -4,10 +4,7 @@ FROM guacamole/guacamole
 EXPOSE 8080
 
 # Download PostgreSQL binaries for your architecture (replace with the appropriate URL)
-RUN curl -L https://download.postgresql.org/repository/ubuntu/13/x86_64/postgresql-13.7-1.el8.x86_64.rpm -o postgresql.rpm
-
-# Install PostgreSQL binaries
-RUN yum install -y postgresql.rpm
+RUN apt get postgresql
 
 # Create data directory (ownership handled by Docker)
 RUN mkdir -p /var/lib/postgresql/data/pgdata
