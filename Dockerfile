@@ -3,10 +3,14 @@ FROM guacamole/guacamole
 # Expose Guacamole web interface port (default 8080)
 EXPOSE 8080
 
-# Create and initialize PostgreSQL data directory (using a dedicated path)
-RUN mkdir -p /app-data/postgresql && \
-    chown -R postgres:postgres /app-data/postgresql && \
-    postgresql-13-initdb -d /app-data/postgresql
+# Download PostgreSQL binaries for your architecture (replace with the appropriate URL)
+RUN curl -L https://download.postgresql.org/repository/ubuntu/13/x86_64/postgresql-13.7-1.el8.x86_64.rpm -o postgresql.rpm
+
+# Install PostgreSQL binaries
+RUN yum install -y postgresql.rpm
+
+# Create data directory (ownership handled by Docker)
+RUN mkdir -p /var/lib/postgresql/data/pgdata
 
 # Environment variables for Guacamole configuration (replace with your values)
 ENV GUACD_PROTOCOL RDP  # Change to VNC if needed
@@ -17,4 +21,5 @@ ENV GUACAMOLE_HOME /config  # Persistence location (optional)
 # Persist configuration (optional)
 VOLUME /config
 
-CMD ["guacd", "-f"]
+# Start the PostgreSQL service (specific command might vary)
+CMD ["postgres", "-D", "/var/lib/postgresql/data/pgdata"]
